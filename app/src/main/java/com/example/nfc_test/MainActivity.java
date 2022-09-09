@@ -282,79 +282,108 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        isoDep = IsoDep.get(tag);
-        if (isoDep != null) {
-            sb.append('\n').append("Iso Deep pass").append('\n');
-            try {
-                // Connect to the remote NFC device
-                isoDep.connect();
-                // Build SELECT AID command for our loyalty card service.
-                // This command tells the remote device which service we wish to communicate with.
-//                Log.i(TAG, "Requesting remote AID: " + SAMPLE_LOYALTY_CARD_AID);
-//                byte[] command = BuildSelectApdu("00A40000026FF2");
-                // Send command to remote device
-//                Log.i(TAG, "Sending: " + ByteArrayToHexString(command));
-//                byte[] command_get_img = {};
-//                byte[] result1 = isoDep.transceive(BuildSelectApdu("00A40000027F0A"));
-//                sb.append("ID (hex): ").append(toHex(result1)).append('\n');
-//                byte[] result2 = isoDep.transceive(BuildSelectApdu("00A40000026FF2"));
-//                sb.append("ID (hex): ").append(toHex(result2)).append('\n');
-//                sb.append("ID (hex): ").append(toHex(isoDep.transceive(BuildSelectApdu("00A40000027F0A")))).append('\n');
-//                sb.append("ID (hex): ").append(toHex(isoDep.transceive(BuildSelectApdu("00A40000026FF2")))).append('\n');
-                byte[] status_success = {
-                        (byte) 0x90,
-                        (byte) 0x00
-                };
-                byte[] command_get_img = {
-                        (byte) 0x00, // CLA = 00 (first interindustry command set)
-                        (byte) 0xA4, // INS = A4 (SELECT)
-                        (byte) 0x00, // P1  = 00 (select file by DF name)
-                        (byte) 0x00, // P2  = 00 (first or only file; no FCI)
-                        (byte) 0x02, // Lc  = 2  (data/AID has 2 bytes)
-                        (byte) 0x7F, (byte) 0x0A // AID 7F0A
-                };
-                byte[] getStatus = {
-                        (byte) 0x00, // CLA = 00 (first interindustry command set)
-                        (byte) 0xA4, // INS = A4 (SELECT)
-                        (byte) 0x00, // P1  = 00 (select file by DF name)
-                        (byte) 0x00, // P2  = 00 (first or only file; no FCI)
-                        (byte) 0x02, // Lc  = 6  (data/AID has 2 bytes)
-                        (byte) 0x6F, (byte) 0xF2 // AID = 6FF2
-                };
-//                sb.append("ID (hex): ").append(toHex(isoDep.transceive(getStatus))).append('\n');
-//                sb.append("ID (hex): ").append(toHex(isoDep.transceive(command_get_img))).append('\n');
-
-                if (Arrays.equals(isoDep.transceive(getStatus), status_success)) {
-                    sb.append("Get status success").append('\n');
-                } else {
-                    sb.append("Get status fail").append('\n');
-                }
-                if (Arrays.equals(isoDep.transceive(command_get_img), status_success)) {
-                    sb.append("Get img success").append('\n');
-                } else {
-                    sb.append("Get img fail").append('\n');
-                }
-                // If AID is successfully selected, 0x9000 is returned as the status word (last 2
-                // bytes of the result) by convention. Everything before the status word is
-                // optional payload, which is used here to hold the account number.
-//                int resultLength = result.length;
-//                byte[] statusWord = {result[resultLength-2], result[resultLength-1]};
-//                byte[] payload = Arrays.copyOf(result, resultLength-2);
-//                if (Arrays.equals(SELECT_OK_SW, statusWord)) {
-//                    // The remote NFC device will immediately respond with its stored account number
-//                    String accountNumber = new String(payload, "UTF-8");
-//                    Log.i(TAG, "Received: " + accountNumber);
-//                    // Inform CardReaderFragment of received account number
-//                    mAccountCallback.get().onAccountReceived(accountNumber);
+//        isoDep = IsoDep.get(tag);
+//        if (isoDep != null) {
+//            sb.append('\n').append("Iso Deep pass").append('\n');
+//            try {
+//                // Connect to the remote NFC device
+//                isoDep.connect();
+//                // Build SELECT AID command for our loyalty card service.
+//                // This command tells the remote device which service we wish to communicate with.
+////                Log.i(TAG, "Requesting remote AID: " + SAMPLE_LOYALTY_CARD_AID);
+////                byte[] command = BuildSelectApdu("00A40000026FF2");
+//                // Send command to remote device
+////                Log.i(TAG, "Sending: " + ByteArrayToHexString(command));
+////                byte[] command_get_img = {};
+////                byte[] result1 = isoDep.transceive(BuildSelectApdu("00A40000027F0A"));
+////                sb.append("ID (hex): ").append(toHex(result1)).append('\n');
+////                byte[] result2 = isoDep.transceive(BuildSelectApdu("00A40000026FF2"));
+////                sb.append("ID (hex): ").append(toHex(result2)).append('\n');
+////                sb.append("ID (hex): ").append(toHex(isoDep.transceive(BuildSelectApdu("00A40000027F0A")))).append('\n');
+////                sb.append("ID (hex): ").append(toHex(isoDep.transceive(BuildSelectApdu("00A40000026FF2")))).append('\n');
+//                byte[] status_success = {
+//                        (byte) 0x90,
+//                        (byte) 0x00
+//                };
+//                byte[] command_get_img = {
+//                        (byte) 0x00, // CLA = 00 (first interindustry command set)
+//                        (byte) 0xA4, // INS = A4 (SELECT)
+//                        (byte) 0x00, // P1  = 00 (select file by DF name)
+//                        (byte) 0x00, // P2  = 00 (first or only file; no FCI)
+//                        (byte) 0x02, // Lc  = 2  (data/AID has 2 bytes)
+//                        (byte) 0x7F, (byte) 0x0A // AID 7F0A
+//                };
+//                byte[] getStatus = {
+//                        (byte) 0x00, // CLA = 00 (first interindustry command set)
+//                        (byte) 0xA4, // INS = A4 (SELECT)
+//                        (byte) 0x00, // P1  = 00 (select file by DF name)
+//                        (byte) 0x00, // P2  = 00 (first or only file; no FCI)
+//                        (byte) 0x02, // Lc  = 6  (data/AID has 2 bytes)
+//                        (byte) 0x6F, (byte) 0xF2 // AID = 6FF2
+//                };
+//
+//                byte[] getImgSize = {
+//                        (byte) 0x00,
+//                        (byte) 0xB0,
+//                        (byte) 0x00,
+//                        (byte) 0x00,
+//                        (byte) 0x02
+//                };
+////                sb.append("ID (hex): ").append(toHex(isoDep.transceive(getStatus))).append('\n');
+////                sb.append("ID (hex): ").append(toHex(isoDep.transceive(command_get_img))).append('\n');
+//
+//                if (Arrays.equals(isoDep.transceive(getStatus), status_success)) {
+//                    sb.append("Get status success").append('\n');
+//                } else {
+//                    sb.append("Get status fail").append('\n');
 //                }
-            } catch (IOException e) {
-                sb.append("Error communicating with card: " + e.toString()).append('\n');
-//                Log.e(TAG, "Error communicating with card: " + e.toString());
-            }
-        }
+//                if (Arrays.equals(isoDep.transceive(command_get_img), status_success)) {
+//                    sb.append("Get img success").append('\n');
+//                    byte[] imgSize = isoDep.transceive(getImgSize);
+//                    sb.append("getImgSize: ").append(toHex(imgSize)).append('\n');
+//                    byte[] getImgCode = {
+//                            (byte) 0x00,
+//                            (byte) 0xB0,
+//                            (byte) 0x00,
+//                            (byte) 0x00,
+//                            (byte) 0x10
+//                    };
+//                    byte[] getImg = isoDep.transceive(getImgCode);
+//                    sb.append("Img: ").append(toHex(getImg)).append('\n');
+//                } else {
+//                    sb.append("Get img fail").append('\n');
+//                }
+//                // If AID is successfully selected, 0x9000 is returned as the status word (last 2
+//                // bytes of the result) by convention. Everything before the status word is
+//                // optional payload, which is used here to hold the account number.
+////                int resultLength = result.length;
+////                byte[] statusWord = {result[resultLength-2], result[resultLength-1]};
+////                byte[] payload = Arrays.copyOf(result, resultLength-2);
+////                if (Arrays.equals(SELECT_OK_SW, statusWord)) {
+////                    // The remote NFC device will immediately respond with its stored account number
+////                    String accountNumber = new String(payload, "UTF-8");
+////                    Log.i(TAG, "Received: " + accountNumber);
+////                    // Inform CardReaderFragment of received account number
+////                    mAccountCallback.get().onAccountReceived(accountNumber);
+////                }
+//            } catch (IOException e) {
+//                sb.append("Error communicating with card: " + e.toString()).append('\n');
+////                Log.e(TAG, "Error communicating with card: " + e.toString());
+//            }
+//        }
 
         Log.v(TAG, sb.toString());
         return sb.toString();
+    }
+
+    public static byte[] mergeArray(byte[] a, byte[] b){
+        int a1 = a.length;
+        int b1 = b.length;
+        int c1 = a1 + b1;
+        byte[] c = new byte[c1];
+        System.arraycopy(a, 0, c, 0, a1);
+        System.arraycopy(b, 0, c, a1, b1);
+        return c;
     }
 
     // AID for our loyalty card service.
